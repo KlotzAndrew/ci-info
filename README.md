@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.com/KlotzAndrew/ci-info.svg?branch=master)](https://travis-ci.com/KlotzAndrew/ci-info)
 [![codecov](https://codecov.io/gh/KlotzAndrew/ci-info/branch/master/graph/badge.svg)](https://codecov.io/gh/KlotzAndrew/ci-info)
 [![Coverage Status](https://coveralls.io/repos/github/KlotzAndrew/ci-info/badge.svg?branch=master)](https://coveralls.io/github/KlotzAndrew/ci-info?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/1e6e6435a35df9bed74f/maintainability)](https://codeclimate.com/github/KlotzAndrew/ci-info/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/1e6e6435a35df9bed74f/test_coverage)](https://codeclimate.com/github/KlotzAndrew/ci-info/test_coverage)
 
 # ci-info
 

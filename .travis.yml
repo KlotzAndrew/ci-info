@@ -1,4 +1,3 @@
-
 language: go
 
 go:
@@ -11,10 +10,30 @@ before_script:
   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
   - go get github.com/mattn/goveralls
 
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
   - golangci-lint run
   - go test -count=1 -race -coverprofile=coverage.txt -covermode=atomic ./...
+  - cp coverage.txt c.out
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - goveralls -service=travis-ci -coverprofile=coverage.txt
+
+deploy:
+  provider: releases
+  api_key:
+    secure: fMYqQe7YEGSAa82N4jNFyywhAxmxjI/qgLk5JyCCmJkK9G2mbFJ2ay/odhRgHEGV61wC2QbNorG29S9eIZjghGjag2viIBGvt9Xs3tXuLWtqTBfqgdBpumN+7HvdCVwVZWn+JTTA1PMV3LHqn5yk9OvqZIfz/eQgpzjIfS6Mq6vGwB5r9q5QRkuCkdttzVvAnE+rUZ8FlVyv+c7SlLBJpR5Vb45tdGMerlDS1306w1Uf6jfD17PFrUagp0RTpCpYlN71tHtCD73WgGaUf0Kbpm0EZFxPjf1asAafxyno2PDjwegSKx7nyedVeCzTf4sKy0Hk8XgX4Lz9Z49PScQu5J2zJpYLXGk/VFV4MtWT/hEebeQZ3Aw9e3HY1SV9KUD+fpWT28qUSQ/CGsoJKDcE9R97Ko9353EEvWKpNCE7UAQqdkbrhXUsSotfcSqkEAT4Us/cnkli8AKzjewvDWUC8GFQcs+nHCZ5UGKrtGfvDTEIGY+tkUTNIDBMUvBlllQ2THApvE81NacVI5JLIKRYpBFCY6QWHipi0U2Ak74isi9UVVwSF6MqBt10B9c4UALuPYQxiXkyEva05DP0xm3DeksMldR50esVYEM475B305uimQ7XNRfF1us4FOK/AVaANgLAg/lNGMbOQ3qmVGKGtfbv+K4LmgM7UenW6x55tqQ=
+  file:
+    - releases/ci-info.linux-amd64.tar.gz
+    - releases/ci-info.linux-amd64
+    - releases/sha256sums.txt
+  on:
+    repo: KlotzAndrew/ci-info
+    tags: true
