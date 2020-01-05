@@ -9,6 +9,7 @@ env:
 
 before_script:
   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+  - go get github.com/mattn/goveralls
 
 script:
   - golangci-lint run
@@ -16,3 +17,4 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - goveralls -service=travis-ci -coverprofile=coverage.txt
