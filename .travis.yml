@@ -12,4 +12,7 @@ before_script:
 
 script:
   - golangci-lint run
-  - go test -count=1 -race ./...
+  - go test -count=1 -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
