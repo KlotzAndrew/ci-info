@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/KlotzAndrew/ci-info.svg?branch=master)](https://travis-ci.com/KlotzAndrew/ci-info)
 [![codecov](https://codecov.io/gh/KlotzAndrew/ci-info/branch/master/graph/badge.svg)](https://codecov.io/gh/KlotzAndrew/ci-info)
+[![Coverage Status](https://coveralls.io/repos/github/KlotzAndrew/ci-info/badge.svg?branch=master)](https://coveralls.io/github/KlotzAndrew/ci-info?branch=master)
 
 # ci-info
 
