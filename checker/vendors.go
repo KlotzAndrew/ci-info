@@ -158,4 +158,9 @@ var Vendors = []Vendor{
 		Env:      Has{"TRAVIS"},
 		PR:       NotEqual{"TRAVIS_PULL_REQUEST", "false"},
 	},
+	Vendor{
+		Name:     "Heroku",
+		Constant: "HEROKU",
+		Env:      Includes{"NODE", "heroku"},
+	},
 }

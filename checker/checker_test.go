@@ -72,3 +72,11 @@ func TestBuildkite(t *testing.T) {
 	assert.NoError(t, os.Setenv("BUILDKITE_PULL_REQUEST", "false"))
 	assert.Equal(t, false, checker.IsCI())
 }
+
+func TestHeroku(t *testing.T) {
+	os.Clearenv()
+	assert.NoError(t, os.Setenv("NODE", "/app/.heroku/node/bin/node"))
+	assert.Equal(t, true, checker.IsCI())
+	assert.Equal(t, false, checker.IsPR())
+	assert.Equal(t, "Heroku", checker.CIName())
+}

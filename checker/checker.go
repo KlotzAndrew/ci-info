@@ -2,6 +2,8 @@ package checker
 
 import "os"
 
+import "strings"
+
 func IsCI() bool {
 	for _, vendor := range Vendors {
 		if vendor.Env.Check() {
@@ -73,4 +75,11 @@ func (a Any) Check() bool {
 		}
 	}
 	return false
+}
+
+type Includes struct{ Env, Sub string }
+
+func (c Includes) Check() bool {
+	val, found := os.LookupEnv(c.Env)
+	return found && strings.Contains(val, c.Sub)
 }
