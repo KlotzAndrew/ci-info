@@ -52,22 +52,22 @@ package main
 import (
 	"fmt"
 
-	"github.com/klotzandrew/ci-info/checker"
+	"github.com/klotzandrew/ci-info/ci"
 )
 
 func main() {
 	fmt.Printf(
 		"ci: %v, pr %v, name: %v",
-		checker.IsCI(),
-		checker.IsPR(),
-		checker.CIName(),
+		ci.IsCI(),
+		ci.IsPR(),
+		ci.CIName(),
 	)
 }
 ```
 
 ## Updating Supported CI tools
 
-Data here: checker/vendors.go
+Data here: ci/vendors.go
 
 ## Supported CI tools
 

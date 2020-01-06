@@ -1,4 +1,4 @@
-package checker
+package ci
 
 import (
 	"os"

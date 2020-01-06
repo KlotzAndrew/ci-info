@@ -23,7 +23,7 @@ after_success:
   - goveralls -service=travis-ci -coverprofile=coverage.txt
   - ./cc-test-reporter after-build coverage.txt --debug --prefix github.com/klotzandrew/ci-info -t gocov --exit-code $TRAVIS_TEST_RESULT
 
-before_deploy: ci/before_deploy.sh
+before_deploy: scripts/before_deploy.sh
 
 deploy:
   provider: releases

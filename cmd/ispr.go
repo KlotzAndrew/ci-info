@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/klotzandrew/ci-info/checker"
+	"github.com/klotzandrew/ci-info/ci"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,7 @@ var isprCmd = &cobra.Command{
 	Short: "Detect if the current environment is a PR in CI",
 	Long:  `Detect if the current environment is a PR in CI`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(checker.IsPR())
+		fmt.Println(ci.IsPR())
 	},
 }
 
