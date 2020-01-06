@@ -6,8 +6,9 @@
 
 # ci-info
 
-Get details about the current Continuous Integration environment. Download as a
-binary and get info regardless of language
+Get details about the current Continuous Integration environment.
+
+Download as a binary and get info regardless of language
 
 ## Installation
 

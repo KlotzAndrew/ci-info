@@ -1,8 +1,9 @@
 package checker
 
-import "os"
-
-import "strings"
+import (
+	"os"
+	"strings"
+)
 
 func IsCI() bool {
 	for _, vendor := range Vendors {

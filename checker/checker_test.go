@@ -4,93 +4,57 @@ import (
 	"os"
 	"testing"
 
-	"github.com/klotzandrew/ci-info/checker"
+	c "github.com/klotzandrew/ci-info/checker"
 	"github.com/stretchr/testify/assert"
 )
 
+var defaultVendors = c.Vendors
+
 func TestNotCI(t *testing.T) {
 	os.Clearenv()
-	assert.Equal(t, false, checker.IsCI())
-	assert.Equal(t, "", checker.CIName())
+	assert.Equal(t, false, c.IsCI())
+	assert.Equal(t, false, c.IsPR())
+	assert.Equal(t, "", c.CIName())
 }
 
-func TestIsCI(t *testing.T) {
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("TRAVIS", "true"))
-	assert.Equal(t, true, checker.IsCI())
-	assert.Equal(t, "Travis CI", checker.CIName())
-}
+func TestChecker(t *testing.T) {
+	vendors := []c.Vendor{
+		c.Vendor{Name: "has", Constant: "c", Env: c.Has{"has-e"}, PR: c.Has{"has-pr"}},
+		c.Vendor{Name: "any", Constant: "c", Env: c.Any{[]string{"any-e"}}, PR: c.Any{[]string{"any-pr"}}},
+	}
 
-func TestNotPR(t *testing.T) {
-	os.Clearenv()
-	assert.Equal(t, false, checker.IsPR())
-}
+	c.Vendors = vendors
+	defer func() { c.Vendors = defaultVendors }()
 
-func TestPRString(t *testing.T) {
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("BITBUCKET_PR_ID", "42"))
-	assert.Equal(t, true, checker.IsPR())
-}
+	for _, vendor := range vendors {
+		os.Clearenv()
 
-func TestPREnv(t *testing.T) {
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("NEVERCODE_PULL_REQUEST", "42"))
-	assert.Equal(t, true, checker.IsPR())
+		if has, ok := vendor.Env.(c.Has); ok {
+			assert.NoError(t, os.Setenv(has.Env, "zzz"))
+			assert.Equal(t, true, c.IsCI(), vendor)
+			assert.Equal(t, vendor.Name, c.CIName())
+			os.Clearenv()
+		}
 
-	os.Clearenv()
-	assert.Equal(t, false, checker.IsPR())
-	assert.NoError(t, os.Setenv("CHANGE_ID", ""))
-	assert.Equal(t, true, checker.IsPR())
-}
+		if has, ok := vendor.PR.(c.Has); ok {
+			assert.NoError(t, os.Setenv(has.Env, "zzz"))
+			assert.Equal(t, true, c.IsPR(), vendor)
+			assert.Equal(t, "", c.CIName())
+			os.Clearenv()
+		}
 
-func TestPRAny(t *testing.T) {
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("ghprbPullId", "42"))
-	assert.Equal(t, true, checker.IsPR())
+		if any, ok := vendor.Env.(c.Any); ok {
+			assert.NoError(t, os.Setenv(any.Envs[0], "zzz"))
+			assert.Equal(t, true, c.IsCI(), vendor)
+			assert.Equal(t, vendor.Name, c.CIName())
+			os.Clearenv()
+		}
 
-	os.Clearenv()
-	assert.Equal(t, false, checker.IsPR())
-
-	assert.NoError(t, os.Setenv("DRONE_BUILD_EVENT", "pull_request"))
-	assert.Equal(t, true, checker.IsPR())
-}
-
-func TestBuildkite(t *testing.T) {
-	os.Clearenv()
-	assert.Equal(t, false, checker.IsCI())
-
-	assert.NoError(t, os.Setenv("BUILDKITE_PULL_REQUEST", "42"))
-	assert.NoError(t, os.Setenv("BUILDKITE", "true"))
-	assert.Equal(t, true, checker.IsCI())
-	assert.Equal(t, true, checker.IsPR())
-	assert.Equal(t, "Buildkite", checker.CIName())
-
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("BUILDKITE_PULL_REQUEST", "true"))
-	assert.Equal(t, true, checker.IsPR())
-
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("BUILDKITE_PULL_REQUEST", "false"))
-	assert.Equal(t, false, checker.IsCI())
-}
-
-func TestHeroku(t *testing.T) {
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("NODE", "/app/.heroku/node/bin/node"))
-	assert.Equal(t, true, checker.IsCI())
-	assert.Equal(t, false, checker.IsPR())
-	assert.Equal(t, "Heroku", checker.CIName())
-}
-
-func TestGiHubActions(t *testing.T) {
-	os.Clearenv()
-	assert.NoError(t, os.Setenv("GITHUB_ACTIONS", "true"))
-	assert.NoError(t, os.Setenv("GITHUB_EVENT_NAME", "push"))
-
-	assert.Equal(t, true, checker.IsCI())
-	assert.Equal(t, false, checker.IsPR())
-	assert.Equal(t, "GitHub Actions", checker.CIName())
-
-	assert.NoError(t, os.Setenv("GITHUB_EVENT_NAME", "pull_request"))
-	assert.Equal(t, true, checker.IsPR())
+		if any, ok := vendor.PR.(c.Any); ok {
+			assert.NoError(t, os.Setenv(any.Envs[0], "zzz"))
+			assert.Equal(t, true, c.IsPR(), vendor)
+			assert.Equal(t, "", c.CIName())
+			os.Clearenv()
+		}
+	}
 }
