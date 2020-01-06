@@ -6,9 +6,22 @@
 
 # ci-info
 
-Get details about the current Continuous Integration environment.
+Get details about the current Continuous Integration environment. Download as a
+binary and get info regardless of language
 
 ## Installation
+
+
+```bash
+curl -L https://github.com//KlotzAndrew/ci-info/releases/latest/download/ci-info.linux-amd64 > ./ci-info
+chmod +x ./ci-info
+
+./ci-info help
+```
+
+You can find the latest release here: https://github.com/KlotzAndrew/ci-info/releases/latest
+
+## Installation from source
 
 ```bash
 go get -u https://github.com/KlotzAndrew/ci-info
@@ -17,7 +30,7 @@ ci-info help
 ```
 
 
-## Usage in CLI project
+## Usage in CLI
 
 ```bash
 ci-info isci
@@ -50,6 +63,10 @@ func main() {
 	)
 }
 ```
+
+## Updating Supported CI tools
+
+Data here: checker/vendors.go
 
 ## Supported CI tools
 
