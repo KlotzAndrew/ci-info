@@ -51,7 +51,7 @@ type Match struct{ Env, Val string }
 
 func (c Match) Check() bool {
 	val, found := os.LookupEnv(c.Env)
-	return found && val != c.Val
+	return found && val == c.Val
 }
 
 type NotEqual struct{ Env, Ne string }

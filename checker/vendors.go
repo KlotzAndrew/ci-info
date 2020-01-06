@@ -97,6 +97,11 @@ var Vendors = []Vendor{
 		PR:       Any{Envs: []string{"ghprbPullId", "CHANGE_ID"}},
 	},
 	Vendor{
+		Name:     "ZEIT Now",
+		Constant: "ZEIT_NOW",
+		Env:      Has{"NOW_BUILDER"},
+	},
+	Vendor{
 		Name:     "Magnum CI",
 		Constant: "MAGNUM",
 		Env:      Has{"MAGNUM"},

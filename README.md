@@ -91,6 +91,7 @@ Data here: checker/vendors.go
 | [Hudson](http://hudson-ci.org) | `ci.HUDSON` | 🚫 |
 | [Jenkins CI](https://jenkins-ci.org) | `ci.JENKINS` | ✅ |
 | [Magnum CI](https://magnum-ci.com) | `ci.MAGNUM` | 🚫 |
+| [ZEIT Now](https://zeit.co/) | `ci.ZEIT_NOW` | 🚫 |
 | [Netlify CI](https://www.netlify.com/) | `ci.NETLIFY` | ✅ |
 | [Nevercode](http://nevercode.io/) | `ci.NEVERCODE` | ✅ |
 | [Render](https://render.com/) | `ci.RENDER` | ✅ |
