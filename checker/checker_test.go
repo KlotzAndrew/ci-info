@@ -81,3 +81,16 @@ func TestHeroku(t *testing.T) {
 	assert.Equal(t, false, checker.IsPR())
 	assert.Equal(t, "Heroku", checker.CIName())
 }
+
+func TestGiHubActions(t *testing.T) {
+	os.Clearenv()
+	assert.NoError(t, os.Setenv("GITHUB_ACTIONS", "true"))
+	assert.NoError(t, os.Setenv("GITHUB_EVENT_NAME", "push"))
+
+	assert.Equal(t, true, checker.IsCI())
+	assert.Equal(t, false, checker.IsPR())
+	assert.Equal(t, "GitHub Actions", checker.CIName())
+
+	assert.NoError(t, os.Setenv("GITHUB_EVENT_NAME", "pull_request"))
+	assert.Equal(t, true, checker.IsPR())
+}

@@ -76,6 +76,12 @@ var Vendors = []Vendor{
 		Env:      Has{"DSARI"},
 	},
 	Vendor{
+		Name:     "GitHub Actions",
+		Constant: "GITHUB_ACTIONS",
+		Env:      Has{"GITHUB_ACTIONS"},
+		PR:       Match{"GITHUB_EVENT_NAME", "pull_request"},
+	},
+	Vendor{
 		Name:     "GitLab CI",
 		Constant: "GITLAB",
 		Env:      Has{"GITLAB_CI"},

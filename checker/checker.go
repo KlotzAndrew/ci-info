@@ -31,13 +31,13 @@ func CIName() string {
 	return ""
 }
 
-type Checker interface {
-	Check() bool
-}
-
 type Vendor struct {
 	Name, Constant string
 	Env, PR        Checker
+}
+
+type Checker interface {
+	Check() bool
 }
 
 type Has struct{ Env string }
