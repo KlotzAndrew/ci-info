@@ -17,6 +17,14 @@ func TestNotCI(t *testing.T) {
 	assert.Equal(t, "", ci.CIName())
 }
 
+func TestUnknownCI(t *testing.T) {
+	os.Clearenv()
+	assert.NoError(t, os.Setenv("CI", "true"))
+	assert.Equal(t, true, ci.IsCI())
+	assert.Equal(t, false, ci.IsPR())
+	assert.Equal(t, "", ci.CIName())
+}
+
 func TestChecker(t *testing.T) {
 	vendors := []ci.Vendor{
 		ci.Vendor{Name: "has", Constant: "c", Env: ci.Has{"has-e"}, PR: ci.Has{"has-pr"}},

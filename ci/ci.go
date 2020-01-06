@@ -6,6 +6,33 @@ import (
 )
 
 func IsCI() bool {
+	if knownVendor() {
+		return true
+	}
+
+	if unknownVendor() {
+		return true
+	}
+
+	return false
+}
+
+var anonymousEnvs = []string{
+	"CI",                     // Travis CI, CircleCI, Cirrus CI, Gitlab CI, Appveyor, CodeShip, dsari
+	"CONTINUOUS_INTEGRATION", // Travis CI, Cirrus CI
+	"BUILD_NUMBER",           // Jenkins, TeamCity
+	"RUN_ID",                 // TaskCluster, dsari
+}
+
+func unknownVendor() bool {
+	for _, env := range anonymousEnvs {
+		_, found := os.LookupEnv(env)
+		return found
+	}
+	return false
+}
+
+func knownVendor() bool {
 	for _, vendor := range Vendors {
 		if vendor.Env.Check() {
 			return true
