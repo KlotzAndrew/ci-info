@@ -17,14 +17,11 @@ before_script:
 script:
   - golangci-lint run
   - go test -count=1 -race -coverprofile=coverage.txt -covermode=atomic ./...
-  - cp coverage.txt c.out
-
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - goveralls -service=travis-ci -coverprofile=coverage.txt
+  - ./cc-test-reporter after-build -t coverage.txt --exit-code $TRAVIS_TEST_RESULT
 
 deploy:
   provider: releases
