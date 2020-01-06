@@ -1,12 +1,10 @@
 package checker
 
-import (
-	"os"
-)
+import "os"
 
 func IsCI() bool {
 	for _, vendor := range Vendors {
-		if checkEnv(vendor) {
+		if vendor.Env.Check() {
 			return true
 		}
 	}
@@ -15,41 +13,8 @@ func IsCI() bool {
 
 func IsPR() bool {
 	for _, vendor := range Vendors {
-		pr := vendor["pr"]
-		str, isString := pr.(string)
-		if isString {
-			_, found := os.LookupEnv(str)
-			if found {
-				return true
-			}
-		}
-
-		obj, isObj := pr.(map[string]string)
-		if isObj {
-			if obj["env"] != "" {
-				val, found := os.LookupEnv(obj["env"])
-				if found && val != obj["ne"] {
-					return true
-				}
-			} else {
-				for k := range obj {
-					_, found := os.LookupEnv(k)
-					if found {
-						return true
-					}
-				}
-			}
-		}
-
-		any, isAny := pr.(map[string][]string)
-		if isAny {
-			if len(any["any"]) > 0 {
-				for _, val := range any["any"] {
-					if _, found := os.LookupEnv(val); found {
-						return true
-					}
-				}
-			}
+		if vendor.PR != nil && vendor.PR.Check() {
+			return true
 		}
 	}
 	return false
@@ -57,24 +22,53 @@ func IsPR() bool {
 
 func CIName() string {
 	for _, vendor := range Vendors {
-		if checkEnv(vendor) {
-			name, ok := vendor["name"].(string)
-			if ok {
-				return name
-			}
+		if vendor.Env.Check() {
+			return vendor.Name
 		}
 	}
 	return ""
 }
 
-func checkEnv(vendor map[string]interface{}) bool {
-	for _, val := range vendor {
-		v, ok := val.(string)
-		if !ok {
-			continue
+type Checker interface {
+	Check() bool
+}
+
+type Vendor struct {
+	Name, Constant string
+	Env, PR        Checker
+}
+
+type Has struct{ Env string }
+
+func (n Has) Check() bool {
+	_, found := os.LookupEnv(n.Env)
+	return found
+}
+
+type Match struct{ Envs map[string]string }
+
+func (n Match) Check() bool {
+	for e, v := range n.Envs {
+		val, found := os.LookupEnv(e)
+		if found && val == v {
+			return true
 		}
-		_, found := os.LookupEnv(v)
-		if found {
+	}
+	return false
+}
+
+type NotEqual struct{ Env, Ne string }
+
+func (n NotEqual) Check() bool {
+	val, found := os.LookupEnv(n.Env)
+	return found && val != n.Ne
+}
+
+type Any struct{ Envs []string }
+
+func (a Any) Check() bool {
+	for _, val := range a.Envs {
+		if _, found := os.LookupEnv(val); found {
 			return true
 		}
 	}

@@ -1,190 +1,161 @@
 package checker
 
-var Vendors = []map[string]interface{}{
-	map[string]interface{}{
-		"name":     "AppVeyor",
-		"constant": "APPVEYOR",
-		"env":      "APPVEYOR",
-		"pr":       "APPVEYOR_PULL_REQUEST_NUMBER",
+var Vendors = []Vendor{
+	Vendor{
+		Name:     "AppVeyor",
+		Constant: "APPVEYOR",
+		Env:      Has{"APPVEYOR"},
+		PR:       Has{"APPVEYOR_PULL_REQUEST_NUMBER"},
 	},
-	map[string]interface{}{
-		"name":     "Azure Pipelines",
-		"constant": "AZURE_PIPELINES",
-		"env":      "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI",
-		"pr":       "SYSTEM_PULLREQUEST_PULLREQUESTID",
+	Vendor{
+		Name:     "Azure Pipelines",
+		Constant: "AZURE_PIPELINES",
+		Env:      Has{"SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"},
+		PR:       Has{"SYSTEM_PULLREQUEST_PULLREQUESTID"},
 	},
-	map[string]interface{}{
-		"name":     "Bamboo",
-		"constant": "BAMBOO",
-		"env":      "bamboo_planKey",
+	Vendor{
+		Name:     "Bamboo",
+		Constant: "BAMBOO",
+		Env:      Has{"bamboo_planKey"},
 	},
-	map[string]interface{}{
-		"name":     "Bitbucket Pipelines",
-		"constant": "BITBUCKET",
-		"env":      "BITBUCKET_COMMIT",
-		"pr":       "BITBUCKET_PR_ID",
+	Vendor{
+		Name:     "Bitbucket Pipelines",
+		Constant: "BITBUCKET",
+		Env:      Has{"BITBUCKET_COMMIT"},
+		PR:       Has{"BITBUCKET_PR_ID"},
 	},
-	map[string]interface{}{
-		"name":     "Bitrise",
-		"constant": "BITRISE",
-		"env":      "BITRISE_IO",
-		"pr":       "BITRISE_PULL_REQUEST",
+	Vendor{
+		Name:     "Bitrise",
+		Constant: "BITRISE",
+		Env:      Has{"BITRISE_IO"},
+		PR:       Has{"BITRISE_PULL_REQUEST"},
 	},
-	map[string]interface{}{
-		"name":     "Buddy",
-		"constant": "BUDDY",
-		"env":      "BUDDY_WORKSPACE_ID",
-		"pr":       "BUDDY_EXECUTION_PULL_REQUEST_ID",
+	Vendor{
+		Name:     "Buddy",
+		Constant: "BUDDY",
+		Env:      Has{"BUDDY_WORKSPACE_ID"},
+		PR:       Has{"BUDDY_EXECUTION_PULL_REQUEST_ID"},
 	},
-	map[string]interface{}{
-		"name":     "Buildkite",
-		"constant": "BUILDKITE",
-		"env":      "BUILDKITE",
-		"pr": map[string]string{
-			"env": "BUILDKITE_PULL_REQUEST",
-			"ne":  "false",
-		},
+	Vendor{
+		Name:     "Buildkite",
+		Constant: "BUILDKITE",
+		Env:      Has{"BUILDKITE"},
+		PR:       NotEqual{"BUILDKITE_PULL_REQUEST", "false"},
 	},
-	map[string]interface{}{
-		"name":     "CircleCI",
-		"constant": "CIRCLE",
-		"env":      "CIRCLECI",
-		"pr":       "CIRCLE_PULL_REQUEST",
+	Vendor{
+		Name:     "CircleCI",
+		Constant: "CIRCLE",
+		Env:      Has{"CIRCLECI"},
+		PR:       Has{"CIRCLE_PULL_REQUEST"},
 	},
-	map[string]interface{}{
-		"name":     "Cirrus CI",
-		"constant": "CIRRUS",
-		"env":      "CIRRUS_CI",
-		"pr":       "CIRRUS_PR",
+	Vendor{
+		Name:     "Cirrus CI",
+		Constant: "CIRRUS",
+		Env:      Has{"CIRRUS_CI"},
+		PR:       Has{"CIRRUS_PR"},
 	},
-	map[string]interface{}{
-		"name":     "AWS CodeBuild",
-		"constant": "CODEBUILD",
-		"env":      "CODEBUILD_BUILD_ARN",
+	Vendor{
+		Name:     "AWS CodeBuild",
+		Constant: "CODEBUILD",
+		Env:      Has{"CODEBUILD_BUILD_ARN"},
 	},
-	map[string]interface{}{
-		"name":     "Codeship",
-		"constant": "CODESHIP",
-		"env": map[string]interface{}{
-			"CI_NAME": "codeship",
-		},
+	Vendor{
+		Name:     "Codeship",
+		Constant: "CODESHIP",
+		Env:      Match{Envs: map[string]string{"CI_NAME": "codeship"}},
 	},
-	map[string]interface{}{
-		"name":     "Drone",
-		"constant": "DRONE",
-		"env":      "DRONE",
-		"pr": map[string]string{
-			"DRONE_BUILD_EVENT": "pull_request",
-		},
+	Vendor{
+		Name:     "Drone",
+		Constant: "DRONE",
+		Env:      Has{"DRONE"},
+		PR:       Match{Envs: map[string]string{"DRONE_BUILD_EVENT": "pull_request"}},
 	},
-	map[string]interface{}{
-		"name":     "dsari",
-		"constant": "DSARI",
-		"env":      "DSARI",
+	Vendor{
+		Name:     "dsari",
+		Constant: "DSARI",
+		Env:      Has{"DSARI"},
 	},
-	map[string]interface{}{
-		"name":     "GitLab CI",
-		"constant": "GITLAB",
-		"env":      "GITLAB_CI",
+	Vendor{
+		Name:     "GitLab CI",
+		Constant: "GITLAB",
+		Env:      Has{"GITLAB_CI"},
 	},
-	map[string]interface{}{
-		"name":     "GoCD",
-		"constant": "GOCD",
-		"env":      "GO_PIPELINE_LABEL",
+	Vendor{
+		Name:     "GoCD",
+		Constant: "GOCD",
+		Env:      Has{"GO_PIPELINE_LABEL"},
 	},
-	map[string]interface{}{
-		"name":     "Hudson",
-		"constant": "HUDSON",
-		"env":      "HUDSON_URL",
+	Vendor{
+		Name:     "Hudson",
+		Constant: "HUDSON",
+		Env:      Has{"HUDSON_URL"},
 	},
-	map[string]interface{}{
-		"name":     "Jenkins",
-		"constant": "JENKINS",
-		"env": []string{
-			"JENKINS_URL",
-			"BUILD_ID",
-		},
-		"pr": map[string][]string{
-			"any": []string{
-				"ghprbPullId",
-				"CHANGE_ID",
-			},
-		},
+	Vendor{
+		Name:     "Jenkins",
+		Constant: "JENKINS",
+		Env:      Any{Envs: []string{"JENKINS_URL", "BUILD_ID"}},
+		PR:       Any{Envs: []string{"ghprbPullId", "CHANGE_ID"}},
 	},
-	map[string]interface{}{
-		"name":     "Magnum CI",
-		"constant": "MAGNUM",
-		"env":      "MAGNUM",
+	Vendor{
+		Name:     "Magnum CI",
+		Constant: "MAGNUM",
+		Env:      Has{"MAGNUM"},
 	},
-	map[string]interface{}{
-		"name":     "Netlify CI",
-		"constant": "NETLIFY",
-		"env":      "NETLIFY_BUILD_BASE",
-		"pr": map[string]string{
-			"env": "PULL_REQUEST",
-			"ne":  "false",
-		},
+	Vendor{
+		Name:     "Netlify CI",
+		Constant: "NETLIFY",
+		Env:      Has{"NETLIFY_BUILD_BASE"},
+		PR:       NotEqual{"PULL_REQUEST", "false"},
 	},
-	map[string]interface{}{
-		"name":     "Nevercode",
-		"constant": "NEVERCODE",
-		"env":      "NEVERCODE",
-		"pr": map[string]string{
-			"env": "NEVERCODE_PULL_REQUEST",
-			"ne":  "false",
-		},
+	Vendor{
+		Name:     "Nevercode",
+		Constant: "NEVERCODE",
+		Env:      Has{"NEVERCODE"},
+		PR:       NotEqual{"NEVERCODE_PULL_REQUEST", "false"},
 	},
-	map[string]interface{}{
-		"name":     "Sail CI",
-		"constant": "SAIL",
-		"env":      "SAILCI",
-		"pr":       "SAIL_PULL_REQUEST_NUMBER",
+	Vendor{
+		Name:     "Sail CI",
+		Constant: "SAIL",
+		Env:      Has{"SAILCI"},
+		PR:       Has{"SAIL_PULL_REQUEST_NUMBER"},
 	},
-	map[string]interface{}{
-		"name":     "Semaphore",
-		"constant": "SEMAPHORE",
-		"env":      "SEMAPHORE",
-		"pr":       "PULL_REQUEST_NUMBER",
+	Vendor{
+		Name:     "Semaphore",
+		Constant: "SEMAPHORE",
+		Env:      Has{"SEMAPHORE"},
+		PR:       Has{"PULL_REQUEST_NUMBER"},
 	},
-	map[string]interface{}{
-		"name":     "Shippable",
-		"constant": "SHIPPABLE",
-		"env":      "SHIPPABLE",
-		"pr": map[string]string{
-			"IS_PULL_REQUEST": "true",
-		},
+	Vendor{
+		Name:     "Shippable",
+		Constant: "SHIPPABLE",
+		Env:      Has{"SHIPPABLE"},
+		PR:       Match{map[string]string{"IS_PULL_REQUEST": "true"}},
 	},
-	map[string]interface{}{
-		"name":     "Solano CI",
-		"constant": "SOLANO",
-		"env":      "TDDIUM",
-		"pr":       "TDDIUM_PR_ID",
+	Vendor{
+		Name:     "Solano CI",
+		Constant: "SOLANO",
+		Env:      Has{"TDDIUM"},
+		PR:       Has{"TDDIUM_PR_ID"},
 	},
-	map[string]interface{}{
-		"name":     "Strider CD",
-		"constant": "STRIDER",
-		"env":      "STRIDER",
+	Vendor{
+		Name:     "Strider CD",
+		Constant: "STRIDER",
+		Env:      Has{"STRIDER"},
 	},
-	map[string]interface{}{
-		"name":     "TaskCluster",
-		"constant": "TASKCLUSTER",
-		"env": []string{
-			"TASK_ID",
-			"RUN_ID",
-		},
+	Vendor{
+		Name:     "TaskCluster",
+		Constant: "TASKCLUSTER",
+		Env:      Any{[]string{"TASK_ID", "RUN_ID"}},
 	},
-	map[string]interface{}{
-		"name":     "TeamCity",
-		"constant": "TEAMCITY",
-		"env":      "TEAMCITY_VERSION",
+	Vendor{
+		Name:     "TeamCity",
+		Constant: "TEAMCITY",
+		Env:      Has{"TEAMCITY_VERSION"},
 	},
-	map[string]interface{}{
-		"name":     "Travis CI",
-		"constant": "TRAVIS",
-		"env":      "TRAVIS",
-		"pr": map[string]string{
-			"env": "TRAVIS_PULL_REQUEST",
-			"ne":  "false",
-		},
+	Vendor{
+		Name:     "Travis CI",
+		Constant: "TRAVIS",
+		Env:      Has{"TRAVIS"},
+		PR:       NotEqual{"TRAVIS_PULL_REQUEST", "false"},
 	},
 }

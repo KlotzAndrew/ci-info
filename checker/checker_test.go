@@ -50,7 +50,7 @@ func TestPRAny(t *testing.T) {
 
 	os.Clearenv()
 	assert.Equal(t, false, checker.IsPR())
-	assert.NoError(t, os.Setenv("DRONE_BUILD_EVENT", ""))
+	assert.NoError(t, os.Setenv("DRONE_BUILD_EVENT", "pull_request"))
 	assert.Equal(t, true, checker.IsPR())
 }
 
