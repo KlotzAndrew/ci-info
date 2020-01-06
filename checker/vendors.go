@@ -62,13 +62,13 @@ var Vendors = []Vendor{
 	Vendor{
 		Name:     "Codeship",
 		Constant: "CODESHIP",
-		Env:      Match{Envs: map[string]string{"CI_NAME": "codeship"}},
+		Env:      Match{"CI_NAME", "codeship"},
 	},
 	Vendor{
 		Name:     "Drone",
 		Constant: "DRONE",
 		Env:      Has{"DRONE"},
-		PR:       Match{Envs: map[string]string{"DRONE_BUILD_EVENT": "pull_request"}},
+		PR:       Match{"DRONE_BUILD_EVENT", "pull_request"},
 	},
 	Vendor{
 		Name:     "dsari",
@@ -120,6 +120,12 @@ var Vendors = []Vendor{
 		PR:       Has{"SAIL_PULL_REQUEST_NUMBER"},
 	},
 	Vendor{
+		Name:     "Render",
+		Constant: "RENDER",
+		Env:      Has{"RENDER"},
+		PR:       Match{"IS_PULL_REQUEST", "true"},
+	},
+	Vendor{
 		Name:     "Semaphore",
 		Constant: "SEMAPHORE",
 		Env:      Has{"SEMAPHORE"},
@@ -129,7 +135,7 @@ var Vendors = []Vendor{
 		Name:     "Shippable",
 		Constant: "SHIPPABLE",
 		Env:      Has{"SHIPPABLE"},
-		PR:       Match{map[string]string{"IS_PULL_REQUEST": "true"}},
+		PR:       Match{"IS_PULL_REQUEST", "true"},
 	},
 	Vendor{
 		Name:     "Solano CI",

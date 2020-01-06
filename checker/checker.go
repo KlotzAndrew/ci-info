@@ -47,16 +47,11 @@ func (n Has) Check() bool {
 	return found
 }
 
-type Match struct{ Envs map[string]string }
+type Match struct{ Env, Val string }
 
-func (n Match) Check() bool {
-	for e, v := range n.Envs {
-		val, found := os.LookupEnv(e)
-		if found && val == v {
-			return true
-		}
-	}
-	return false
+func (c Match) Check() bool {
+	val, found := os.LookupEnv(c.Env)
+	return found && val != c.Val
 }
 
 type NotEqual struct{ Env, Ne string }
