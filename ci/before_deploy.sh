@@ -2,9 +2,9 @@
 
 set -ex
 
-mkdir -p releases
-GOOS=linux GOARCH=amd64 go build -o ./releases/ci-info.linux-amd64 .
-tar czfv ./releases/ci-info.linux-amd64.tar.gz ./releases/ci-info.linux-amd64
+mkdir -p deployment
+GOOS=linux GOARCH=amd64 go build -o ./deployment/ci-info.linux-amd64 .
+tar czfv ./deployment/ci-info.linux-amd64.tar.gz ./deployment/ci-info.linux-amd64
 
-shasum -a 256 ./releases/* > ./releases/sha256sums.txt
-cat ./releases/sha256sums.txt
+shasum -a 256 ./deployment/* > ./deployment/sha256sums.txt
+cat ./deployment/sha256sums.txt
