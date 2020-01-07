@@ -9,6 +9,7 @@ env:
 before_script:
   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
   - go get github.com/mattn/goveralls
+  - go get github.com/schrej/godacov # codacy
 
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -22,6 +23,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
   - goveralls -service=travis-ci -coverprofile=coverage.txt
   - ./cc-test-reporter after-build coverage.txt --debug --prefix github.com/klotzandrew/ci-info -t gocov --exit-code $TRAVIS_TEST_RESULT
+  - godacov -t $CODACY_TOKEN -r ./coverage.txt -c $TRAVIS_COMMIT # codacy
 
 before_deploy: scripts/before_deploy.sh
 
