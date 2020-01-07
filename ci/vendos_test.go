@@ -12,11 +12,11 @@ func TestTravis(t *testing.T) {
 	os.Clearenv()
 	assert.NoError(t, os.Setenv("TRAVIS", "true"))
 	assert.Equal(t, true, ci.IsCI())
-	assert.Equal(t, "Travis CI", ci.CIName())
+	assert.Equal(t, "Travis CI", ci.Name())
 
 	assert.NoError(t, os.Setenv("TRAVIS_PULL_REQUEST", "true"))
 	assert.Equal(t, true, ci.IsPR())
-	assert.Equal(t, "Travis CI", ci.CIName())
+	assert.Equal(t, "Travis CI", ci.Name())
 }
 
 func TestBitBucket(t *testing.T) {
@@ -40,7 +40,7 @@ func TestJenkins(t *testing.T) {
 	os.Clearenv()
 	assert.NoError(t, os.Setenv("JENKINS_URL", "42"))
 	assert.Equal(t, true, ci.IsCI())
-	assert.Equal(t, "Jenkins", ci.CIName())
+	assert.Equal(t, "Jenkins", ci.Name())
 
 	os.Clearenv()
 	assert.NoError(t, os.Setenv("BUILD_ID", "42"))
@@ -62,7 +62,7 @@ func TestBuildkite(t *testing.T) {
 
 	assert.NoError(t, os.Setenv("BUILDKITE_PULL_REQUEST", "42"))
 	assert.Equal(t, true, ci.IsPR())
-	assert.Equal(t, "Buildkite", ci.CIName())
+	assert.Equal(t, "Buildkite", ci.Name())
 }
 
 func TestHeroku(t *testing.T) {
@@ -70,7 +70,7 @@ func TestHeroku(t *testing.T) {
 	assert.NoError(t, os.Setenv("NODE", "/app/.heroku/node/bin/node"))
 	assert.Equal(t, true, ci.IsCI())
 	assert.Equal(t, false, ci.IsPR())
-	assert.Equal(t, "Heroku", ci.CIName())
+	assert.Equal(t, "Heroku", ci.Name())
 }
 
 func TestGiHubActions(t *testing.T) {
@@ -80,7 +80,7 @@ func TestGiHubActions(t *testing.T) {
 
 	assert.Equal(t, true, ci.IsCI())
 	assert.Equal(t, false, ci.IsPR())
-	assert.Equal(t, "GitHub Actions", ci.CIName())
+	assert.Equal(t, "GitHub Actions", ci.Name())
 
 	assert.NoError(t, os.Setenv("GITHUB_EVENT_NAME", "pull_request"))
 	assert.Equal(t, true, ci.IsPR())

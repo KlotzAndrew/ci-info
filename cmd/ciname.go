@@ -12,7 +12,7 @@ var cinameCmd = &cobra.Command{
 	Short: "Return name of CI",
 	Long:  `Return name of CI`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(ci.CIName())
+		fmt.Println(ci.Name())
 	},
 }
 

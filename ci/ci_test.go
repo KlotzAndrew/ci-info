@@ -14,7 +14,7 @@ func TestNotCI(t *testing.T) {
 	os.Clearenv()
 	assert.Equal(t, false, ci.IsCI())
 	assert.Equal(t, false, ci.IsPR())
-	assert.Equal(t, "", ci.CIName())
+	assert.Equal(t, "", ci.Name())
 }
 
 func TestUnknownCI(t *testing.T) {
@@ -22,47 +22,42 @@ func TestUnknownCI(t *testing.T) {
 	assert.NoError(t, os.Setenv("CI", "true"))
 	assert.Equal(t, true, ci.IsCI())
 	assert.Equal(t, false, ci.IsPR())
-	assert.Equal(t, "", ci.CIName())
+	assert.Equal(t, "", ci.Name())
 }
 
 func TestChecker(t *testing.T) {
-	vendors := []ci.Vendor{
-		ci.Vendor{Name: "has", Constant: "c", Env: ci.Has{"has-e"}, PR: ci.Has{"has-pr"}},
-		ci.Vendor{Name: "any", Constant: "c", Env: ci.Any{[]string{"any-e"}}, PR: ci.Any{[]string{"any-pr"}}},
-	}
-
-	ci.Vendors = vendors
-	defer func() { ci.Vendors = defaultVendors }()
-
-	for _, vendor := range vendors {
+	for _, tt := range []struct {
+		vendor ci.Vendor
+		want   ci.Info
+		envs   map[string]string
+	}{
+		{
+			vendor: ci.Vendor{Name: "d", Constant: "a", Env: ci.Has{"b"}, PR: ci.Has{"c"}},
+			want:   ci.Info{Name: "d", IsCI: true, CanCheckPR: true, IsPR: true},
+			envs:   map[string]string{"b": "t", "c": "t"},
+		},
+		{
+			vendor: ci.Vendor{Name: "anon", Constant: "a", Env: ci.Has{"b"}},
+			want:   ci.Info{Name: "", IsCI: true, CanCheckPR: false, IsPR: false},
+			envs:   map[string]string{"CI": "t"},
+		},
+		{
+			vendor: ci.Vendor{Name: "none", Constant: "a", Env: ci.Has{"b"}},
+			want:   ci.Info{Name: "", IsCI: false, CanCheckPR: false, IsPR: false},
+			envs:   map[string]string{},
+		},
+	} {
 		os.Clearenv()
-
-		if has, ok := vendor.Env.(ci.Has); ok {
-			assert.NoError(t, os.Setenv(has.Env, "zzz"))
-			assert.Equal(t, true, ci.IsCI(), vendor)
-			assert.Equal(t, vendor.Name, ci.CIName())
-			os.Clearenv()
+		ci.Vendors = []ci.Vendor{tt.vendor}
+		defer func() { ci.Vendors = defaultVendors }()
+		for e, v := range tt.envs {
+			assert.NoError(t, os.Setenv(e, v))
 		}
 
-		if has, ok := vendor.PR.(ci.Has); ok {
-			assert.NoError(t, os.Setenv(has.Env, "zzz"))
-			assert.Equal(t, true, ci.IsPR(), vendor)
-			assert.Equal(t, "", ci.CIName())
-			os.Clearenv()
-		}
-
-		if any, ok := vendor.Env.(ci.Any); ok {
-			assert.NoError(t, os.Setenv(any.Envs[0], "zzz"))
-			assert.Equal(t, true, ci.IsCI(), vendor)
-			assert.Equal(t, vendor.Name, ci.CIName())
-			os.Clearenv()
-		}
-
-		if any, ok := vendor.PR.(ci.Any); ok {
-			assert.NoError(t, os.Setenv(any.Envs[0], "zzz"))
-			assert.Equal(t, true, ci.IsPR(), vendor)
-			assert.Equal(t, "", ci.CIName())
-			os.Clearenv()
-		}
+		assert.Equal(t, tt.want.Name, ci.Name())
+		assert.Equal(t, tt.want.IsCI, ci.IsCI())
+		assert.Equal(t, tt.want.IsPR, ci.IsPR())
+		assert.Equal(t, tt.want.CanCheckPR, ci.CanCheckPR())
+		assert.Equal(t, tt.want, ci.GetInfo())
 	}
 }

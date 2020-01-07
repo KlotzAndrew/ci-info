@@ -40,6 +40,9 @@ ci-info isci
 ci-info ispr
 # flase
 
+ci-info cancheckpr
+# false
+
 ci-info ciname
 # Travis CI
 ```
@@ -57,11 +60,21 @@ import (
 
 func main() {
 	fmt.Printf(
-		"ci: %v, pr %v, name: %v",
-		ci.IsCI(),
+		"ci: %v, can_check_pr: %v, pr %v, name: %v",
+    ci.IsCI(),
+    ci.CanCheckPR(),
 		ci.IsPR(),
-		ci.CIName(),
-	)
+		ci.Name(),
+  )
+
+  info := ci.Info()
+  fmt.Printf(
+		"ci: %v, can_check_pr: %v, pr %v, name: %v",
+    info.IsCI,
+    info.CanCheckPR,
+		info.IsPR,
+		info.Name,
+  )
 }
 ```
 

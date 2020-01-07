@@ -6,7 +6,7 @@ import (
 )
 
 func IsCI() bool {
-	if knownVendor() {
+	if _, found := knownVendor(); found {
 		return true
 	}
 
@@ -26,19 +26,20 @@ var anonymousEnvs = []string{
 
 func unknownVendor() bool {
 	for _, env := range anonymousEnvs {
-		_, found := os.LookupEnv(env)
-		return found
-	}
-	return false
-}
-
-func knownVendor() bool {
-	for _, vendor := range Vendors {
-		if vendor.Env.Check() {
+		if _, found := os.LookupEnv(env); found {
 			return true
 		}
 	}
 	return false
+}
+
+func knownVendor() (string, bool) {
+	for _, vendor := range Vendors {
+		if vendor.Env.Check() {
+			return vendor.Name, true
+		}
+	}
+	return "", false
 }
 
 func IsPR() bool {
@@ -50,13 +51,36 @@ func IsPR() bool {
 	return false
 }
 
-func CIName() string {
+func CanCheckPR() bool {
 	for _, vendor := range Vendors {
-		if vendor.Env.Check() {
-			return vendor.Name
+		if vendor.PR != nil {
+			return true
 		}
 	}
+	return false
+}
+
+func Name() string {
+	if name, found := knownVendor(); found {
+		return name
+	}
 	return ""
+}
+
+type Info struct {
+	Name       string `json:"name"`
+	IsCI       bool   `json:"is_ci"`
+	IsPR       bool   `json:"is_pr"`
+	CanCheckPR bool   `json:"can_check_pr"`
+}
+
+func GetInfo() Info {
+	return Info{
+		Name:       Name(),
+		IsCI:       IsCI(),
+		CanCheckPR: CanCheckPR(),
+		IsPR:       IsPR(),
+	}
 }
 
 type Vendor struct {
