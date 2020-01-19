@@ -5,11 +5,19 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/1e6e6435a35df9bed74f/test_coverage)](https://codeclimate.com/github/KlotzAndrew/ci-info/test_coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d251f0736d64ea29cfa4334c9aaeabb)](https://www.codacy.com/manual/KlotzAndrew/ci-info?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=KlotzAndrew/ci-info&amp;utm_campaign=Badge_Grade)
 
+
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/KlotzAndrew/ci-info)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/KlotzAndrew/ci-info)
+
 # ci-info
 
 Get details about the current Continuous Integration environment.
 
 Download as a binary and get info regardless of language
+
+## Contributing
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github/KlotzAndrew/ci-info/issues)
+
 
 ## Installation
 
